@@ -14,6 +14,7 @@ app.get('/', (req, res) => {
 
 app.use("/auth", require("./routes/auth"));
 app.use("/users", require("./routes/user"));
+app.use("/transactions", require("./routes/transaction"));
 
 app.listen(port, () => {
     console.log(`Visinema app listening on port ${port}`)

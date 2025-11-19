@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     User.beforeUpdate(async (user) => {
-        if (user.changed("password")) {
+        if (user.changed("password") && user.password !== "") {
             user.password = await bcrypt.hash(user.password, 10);
         }
     });

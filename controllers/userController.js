@@ -1,13 +1,20 @@
+const { Op } = require("sequelize");
 const { User } = require("../models");
 
 module.exports = {
     getAll: async (req, res) => {
         try {
+            const q = req.query.q ?? "";
             const users = await User.findAll({
                 attributes: ["id", "name", "email", "role", "createdAt"],
                 order: [
                     ['createdAt', 'DESC'],
-                ]
+                ],
+                where: {
+                    name: {
+                        [Op.like]: `%${q}%`
+                    }
+                }
             });
             res.json(users);
         } catch (error) {

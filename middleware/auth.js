@@ -7,21 +7,21 @@ module.exports = function(requiredRole = 'user') {
         if (!token) return res.status(401).json({ message: "No token provided" });
 
         try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || "secret123");
-        req.user = decoded;
+            const decoded = jwt.verify(token, process.env.JWT_SECRET || "secret123");
+            req.user = decoded;
 
-        // Jika API membutuhkan role
-        if (requiredRole) {
-            const rolesAllowed = Array.isArray(requiredRole)
-            ? requiredRole
-            : [requiredRole];
+            // Jika API membutuhkan role
+            if (requiredRole === 'admin') {
+                const rolesAllowed = Array.isArray(requiredRole)
+                ? requiredRole
+                : [requiredRole];
 
-            if (!rolesAllowed.includes(decoded.role) && decoded.role !== 'admin') {
-                return res.status(403).json({ message: "Access forbidden: insufficient role" });
+                if (!rolesAllowed.includes(decoded.role)) {
+                    return res.status(403).json({ message: "Access forbidden: insufficient role" });
+                }
             }
-        }
 
-        next();
+            next();
         } catch (error) {
             res.status(401).json({ message: "Invalid token" });
         }
